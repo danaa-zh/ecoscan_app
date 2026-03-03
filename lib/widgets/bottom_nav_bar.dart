@@ -1,5 +1,5 @@
 import 'package:ecoscan_app/core/theme/app_colors.dart';
-import 'package:ecoscan_app/core/router/router.dart';
+import 'package:ecoscan_app/core/router/app_router.dart';
 import 'package:flutter/material.dart';
 
 enum BottomNavItem { profile, store, scan, leaderboard, map }

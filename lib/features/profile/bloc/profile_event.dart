@@ -1,0 +1,15 @@
+import 'package:equatable/equatable.dart';
+
+sealed class ProfileEvent extends Equatable {
+  const ProfileEvent();
+  @override
+  List<Object?> get props => [];
+}
+
+class ProfileLoadRequested extends ProfileEvent {
+  const ProfileLoadRequested(this.uid);
+  final String uid;
+
+  @override
+  List<Object?> get props => [uid];
+}

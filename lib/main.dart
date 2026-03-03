@@ -1,23 +1,24 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:ecoscan_app/features/onboarding/ui/onboarding_screen.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'firebase_options.dart';
+import 'app.dart';
+import 'core/utils/logger.dart';
 
-void main() {
-  runApp(const EcoscanApp());
-}
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
-class EcoscanApp extends StatelessWidget {
-  const EcoscanApp({super.key});
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Ecoscan',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const OnboardingScreen(),
-    );
+  try {
+    await dotenv.load(fileName: ".env");
+  } catch (_) {
+    // .env optional
   }
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  AppLog.i('Firebase initialized');
+
+  runApp(const EcoScanApp());
 }

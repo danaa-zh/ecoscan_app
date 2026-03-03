@@ -1,0 +1,24 @@
+import 'package:equatable/equatable.dart';
+import '../../../data/models/user_model.dart';
+
+sealed class AppEvent extends Equatable {
+  const AppEvent();
+  @override
+  List<Object?> get props => [];
+}
+
+class AppStarted extends AppEvent {
+  const AppStarted();
+}
+
+class AppAuthStateChanged extends AppEvent {
+  const AppAuthStateChanged(this.user);
+  final UserModel user;
+
+  @override
+  List<Object?> get props => [user];
+}
+
+class AppSignOutRequested extends AppEvent {
+  const AppSignOutRequested();
+}
