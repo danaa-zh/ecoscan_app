@@ -1,5 +1,6 @@
 import 'package:ecoscan_app/core/theme/app_colors.dart';
-import 'package:ecoscan_app/features/profile/ui/profile_screen.dart';
+import 'package:ecoscan_app/features/register/ui/register_screen.dart';
+import 'package:ecoscan_app/features/login/ui/login_screen.dart';
 import 'package:flutter/material.dart';
 
 /// Onboarding screen that matches the provided Figma specs.
@@ -45,7 +46,7 @@ class OnboardingScreen extends StatelessWidget {
                     onPressed: () {
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
-                          builder: (_) => const ProfilePage(),
+                          builder: (_) => const RegisterPage(),
                         ),
                       );
                     },
@@ -75,7 +76,7 @@ class OnboardingScreen extends StatelessWidget {
                     onPressed: () {
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
-                          builder: (_) => const ProfilePage(),
+                          builder: (_) => const LoginPage(),
                         ),
                       );
                     },

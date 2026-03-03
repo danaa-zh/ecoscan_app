@@ -170,128 +170,131 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
           const Color(0xFF7F2D56),
         ];
 
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 22),
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: [
+        return Center(
+          child: SizedBox(
+            width: 330,
+            height: 65,
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
 
-              /// RECTANGLE
-              Padding(
-                padding: const EdgeInsets.only(left: 31),
-                child: Container(
-                  width: 325,
-                  height: 58,
-                  decoration: BoxDecoration(
-                    color: colors[i],
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: Row(
-                    children: [
+                /// RECTANGLE (background)
+                Positioned(
+                  top: 7,
+                  left: 5,
+                  child: Container(
+                    width: 325,
+                    height: 58,
+                    decoration: BoxDecoration(
+                      color: colors[i],
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Row(
+                      children: [
 
-                      const SizedBox(width: 10),
+                        /// AVATAR
+                        Container(
+                          width: 44,
+                          height: 46,
+                          margin:
+                              const EdgeInsets.only(top: 6, left: 10),
+                          decoration: BoxDecoration(
+                            color: colors[i],
+                            borderRadius: BorderRadius.circular(5),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Color.fromRGBO(
+                                    0, 0, 0, 0.25),
+                                blurRadius: 7,
+                                spreadRadius: 2,
+                              )
+                            ],
+                          ),
+                          child: Center(
+                            child: Text(
+                              data.$1[0].toUpperCase(),
+                              style: const TextStyle(
+                                fontFamily: 'Inter',
+                                fontSize: 30,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
 
-                      /// AVATAR
-                      Container(
-                        width: 44,
-                        height: 46,
-                        margin: const EdgeInsets.only(top: 6),
-                        decoration: BoxDecoration(
-                          color: colors[i],
-                          borderRadius: BorderRadius.circular(5),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Color.fromRGBO(
-                                  0, 0, 0, 0.25),
-                              blurRadius: 7,
-                              spreadRadius: 2,
-                            )
+                        const SizedBox(width: 8),
+
+                        Column(
+                          mainAxisAlignment:
+                              MainAxisAlignment.center,
+                          crossAxisAlignment:
+                              CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              data.$1,
+                              style: TextStyle(
+                                fontFamily: 'Inter',
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                                color: i == 0
+                                    ? AppColors.brandGreen
+                                    : Colors.white,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              data.$2,
+                              style: TextStyle(
+                                fontFamily: 'Inter',
+                                fontSize: 13,
+                                color: i == 0
+                                    ? AppColors.brandGreen
+                                    : Colors.white,
+                              ),
+                            ),
                           ],
                         ),
-                        child: Center(
-                          child: Text(
-                            data.$1[0].toUpperCase(),
-                            style: const TextStyle(
-                              fontFamily: 'Inter',
-                              fontSize: 30,
-                              color: Colors.white,
-                            ),
+
+                        const Spacer(),
+
+                        Padding(
+                          padding:
+                              const EdgeInsets.only(right: 11),
+                          child: Image.asset(
+                            'assets/black-right-arrow.png',
+                            width: 14,
+                            height: 8,
                           ),
                         ),
-                      ),
-
-                      const SizedBox(width: 8),
-
-                      Column(
-                        mainAxisAlignment:
-                            MainAxisAlignment.center,
-                        crossAxisAlignment:
-                            CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            data.$1,
-                            style: TextStyle(
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.bold,
-                              fontSize: 13,
-                              color: i == 0
-                                  ? AppColors.brandGreen
-                                  : Colors.white,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            data.$2,
-                            style: TextStyle(
-                              fontFamily: 'Inter',
-                              fontSize: 13,
-                              color: i == 0
-                                  ? AppColors.brandGreen
-                                  : Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      const Spacer(),
-
-                      Padding(
-                        padding:
-                            const EdgeInsets.only(right: 11),
-                        child: Image.asset(
-                          'assets/black-right-arrow.png',
-                          width: 14,
-                          height: 8,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              /// NUMBER ROUND
-              Positioned(
-                left: 26 - 5,
-                top: 7,
-                child: Container(
-                  width: 20,
-                  height: 20,
-                  decoration: BoxDecoration(
-                    color: colors[i],
-                    shape: BoxShape.circle,
-                  ),
-                  alignment: Alignment.center,
-                  child: Text(
-                    '${i + 1}',
-                    style: const TextStyle(
-                      fontFamily: 'Inter',
-                      fontSize: 16,
-                      color: Colors.white,
+                      ],
                     ),
                   ),
                 ),
-              ),
-            ],
+
+                /// NUMBER ROUND
+                Positioned(
+                  right: 310,
+                  bottom: 45,
+                  child: Container(
+                    width: 20,
+                    height: 20,
+                    decoration: BoxDecoration(
+                      color: colors[i],
+                      shape: BoxShape.circle,
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      '${i + 1}',
+                      style: const TextStyle(
+                        fontFamily: 'Inter',
+                        fontSize: 16,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       }),

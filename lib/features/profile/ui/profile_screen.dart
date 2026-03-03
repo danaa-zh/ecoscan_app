@@ -324,21 +324,25 @@ class _ProfilePageState extends State<ProfilePage> {
             const _HistoryItem(
               title: '5 пластиковые бутылки',
               subtitle: '21.02.2026 11:45 ТРЦ “Mega”',
+              bonusText: '+ 50 бонусов',
             ),
             const SizedBox(height: 5),
             const _HistoryItem(
               title: '3 алюминевые банки',
               subtitle: '20.02.2026 11:45 Университет “МУИТ”',
+              bonusText: '+ 30 бонусов',
             ),
             const SizedBox(height: 5),
             const _HistoryItem(
               title: '7 тетрапакет',
               subtitle: '18.02.2026 11:45 Банк “Halyk”',
+              bonusText: '+ 70 бонусов',
             ),
             const SizedBox(height: 5),
             const _HistoryItem(
               title: '3 стеклянные бутылки',
               subtitle: '17.02.2026 11:45 Колледж “МАБ”',
+              bonusText: '+ 30 бонусов',
             ),
           ],
         );
@@ -547,10 +551,12 @@ class _HistoryItem extends StatelessWidget {
   const _HistoryItem({
     required this.title,
     required this.subtitle,
+    this.bonusText,
   });
 
   final String title;
   final String subtitle;
+  final String? bonusText;
 
   @override
   Widget build(BuildContext context) {
@@ -582,28 +588,46 @@ class _HistoryItem extends StatelessWidget {
             ),
             const SizedBox(width: 6),
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
+              child: Stack(
                 children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      // fontFamily: 'Inter',
-                      fontSize: 10,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.black,
-                    ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        title,
+                        style: const TextStyle(
+                          // fontFamily: 'Inter',
+                          fontSize: 10,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.black,
+                        ),
+                      ),
+                      Text(
+                        subtitle,
+                        style: const TextStyle(
+                          // fontFamily: 'Inter',
+                          fontSize: 10,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.theGrey,
+                        ),
+                      ),
+                    ],
                   ),
-                  Text(
-                    subtitle,
-                    style: const TextStyle(
-                      // fontFamily: 'Inter',
-                      fontSize: 10,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.theGrey,
+                  if (bonusText != null)
+                    Positioned(
+                      top: 10,
+                      right: 16,
+                      child: Text(
+                        bonusText!,
+                        style: const TextStyle(
+                          // fontFamily: 'Inter',
+                          fontSize: 10,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.bonus,
+                        ),
+                      ),
                     ),
-                  ),
                 ],
               ),
             ),
