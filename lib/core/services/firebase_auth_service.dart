@@ -2,10 +2,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class FirebaseAuthService {
-  FirebaseAuthService({FirebaseAuth? firebaseAuth})
-      : _auth = firebaseAuth ?? FirebaseAuth.instance;
+  FirebaseAuthService({
+    FirebaseAuth? firebaseAuth,
+  })  : _auth = firebaseAuth ?? FirebaseAuth.instance,
+        _google = GoogleSignIn.instance;
 
   final FirebaseAuth _auth;
+  final GoogleSignIn _google;
 
   Stream<User?> authStateChanges() => _auth.authStateChanges();
   User? get currentUser => _auth.currentUser;
@@ -19,22 +22,18 @@ class FirebaseAuthService {
   }
 
   Future<UserCredential> signInWithGoogle() async {
-    final googleUser = await GoogleSignIn().signIn();
-    if (googleUser == null) {
-      throw FirebaseAuthException(code: 'CANCELLED', message: 'Google sign-in cancelled');
-    }
+    final account = await _google.authenticate();
+    final auth = account.authentication;
 
-    final googleAuth = await googleUser.authentication;
     final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
+      idToken: auth.idToken,
     );
 
     return _auth.signInWithCredential(credential);
   }
 
   Future<void> signOut() async {
-    await GoogleSignIn().signOut();
+    await _google.signOut();
     await _auth.signOut();
   }
 }

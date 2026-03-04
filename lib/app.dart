@@ -29,12 +29,12 @@ class EcoScanApp extends StatelessWidget {
 
     return MultiRepositoryProvider(
       providers: [
-        RepositoryProvider.value(value: authRepo),
-        RepositoryProvider.value(value: userRepo),
-        RepositoryProvider.value(value: recycleRepo),
+        RepositoryProvider<AuthRepository>.value(value: authRepo),
+        RepositoryProvider<UserRepository>.value(value: userRepo),
+        RepositoryProvider<RecycleRepository>.value(value: recycleRepo),
       ],
       child: BlocProvider(
-        create: (_) => AppBloc(authRepository: authRepo)..add(const AppStarted()),
+        create: (_) => AppBloc(authRepository: authRepo),
         child: MaterialApp.router(
           debugShowCheckedModeBanner: false,
           title: 'EcoScan',

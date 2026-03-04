@@ -3,7 +3,6 @@ import 'package:ecoscan_app/features/register/ui/register_screen.dart';
 import 'package:ecoscan_app/features/login/ui/login_screen.dart';
 import 'package:flutter/material.dart';
 
-/// Onboarding screen that matches the provided Figma specs.
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});
 
@@ -13,14 +12,13 @@ class OnboardingScreen extends StatelessWidget {
       backgroundColor: AppColors.white,
       body: SafeArea(
         child: Padding(
-          // Horizontal padding so content matches measured widths (e.g. 345).
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 56), // top padding to Eco
+              const SizedBox(height: 56),
               const _EcoScanLogo(),
-              const SizedBox(height: 64), // slightly tighter spacing between logo and text
+              const SizedBox(height: 64),
               SizedBox(
                 width: 294,
                 height: 57,
@@ -36,8 +34,7 @@ class OnboardingScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              const Spacer(), // flexible spacing so logo always fully visible
-              // Primary button: НАЧАТЬ
+              const Spacer(),
               Center(
                 child: SizedBox(
                   width: 345,
@@ -54,7 +51,6 @@ class OnboardingScreen extends StatelessWidget {
                       backgroundColor: AppColors.btn,
                       foregroundColor: AppColors.white,
                       shape: RoundedRectangleBorder(
-                        // 5% of width ≈ 17.25
                         borderRadius: BorderRadius.circular(17.25),
                       ),
                       textStyle: const TextStyle(
@@ -66,8 +62,7 @@ class OnboardingScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 10), // spacing between buttons
-              // Secondary button: У МЕНЯ УЖЕ ЕСТЬ АККАУНТ
+              const SizedBox(height: 10),
               Center(
                 child: SizedBox(
                   width: 345,
@@ -81,7 +76,6 @@ class OnboardingScreen extends StatelessWidget {
                       );
                     },
                     style: OutlinedButton.styleFrom(
-                      // Transparent background, only border visible.
                       backgroundColor: Colors.transparent,
                       foregroundColor: AppColors.btnHaveAccText,
                       side: const BorderSide(
@@ -100,7 +94,7 @@ class OnboardingScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 40), // softer bottom padding so it fits on small screens
+              const SizedBox(height: 40),
             ],
           ),
         ),
@@ -109,8 +103,6 @@ class OnboardingScreen extends StatelessWidget {
   }
 }
 
-/// "Eco" (lightGreen with brandGreen border) and "Scan" (brandGreen),
-/// each 79 high, overlapping vertically by 4.
 class _EcoScanLogo extends StatelessWidget {
   const _EcoScanLogo();
 
@@ -137,16 +129,12 @@ class _EcoScanLogo extends StatelessWidget {
       fontWeight: fontWeight,
     );
 
-    // Use a Stack so the words overlap but both remain fully visible.
-    // Constrain width so the right edge lines up with other content.
     return SizedBox(
-      width: 294, // match the text block width for right padding symmetry
+      width: 294,
       child: Stack(
         clipBehavior: Clip.none,
         children: const [
-          // Base word
           Text('Eco', style: ecoStyle),
-          // Second word shifted right by 8 and slightly up (≈4px overlap)
           Positioned(
             left: 0,
             top: 72,

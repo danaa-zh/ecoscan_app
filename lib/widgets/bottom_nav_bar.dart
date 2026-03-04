@@ -1,6 +1,7 @@
 import 'package:ecoscan_app/core/theme/app_colors.dart';
-import 'package:ecoscan_app/core/router/app_router.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ecoscan_app/core/router/route_names.dart';
 
 enum BottomNavItem { profile, store, scan, leaderboard, map }
 
@@ -103,3 +104,13 @@ class _NavIcon extends StatelessWidget {
   }
 }
 
+void navigateToBottomItem(BuildContext context, BottomNavItem item) {
+  final path = switch (item) {
+    BottomNavItem.profile => RouteNames.profilePath,
+    BottomNavItem.store => RouteNames.storePath,
+    BottomNavItem.scan => RouteNames.scanPath,
+    BottomNavItem.leaderboard => RouteNames.leaderboardPath,
+    BottomNavItem.map => RouteNames.mapPath,
+  };
+  context.go(path);
+}

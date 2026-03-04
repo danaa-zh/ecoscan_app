@@ -1,11 +1,11 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../data/repositories/auth_repository.dart';
-import '../../features/app/bloc/app_bloc.dart';
-import '../../features/app/ui/splash_screen.dart';
+import '../../features/splash/ui/splash_screen.dart';
 import '../../features/onboarding/ui/onboarding_screen.dart';
-import '../../features/auth/ui/login_screen.dart';
-import '../../features/auth/ui/register_screen.dart';
+import '../../features/login/ui/login_screen.dart';
+import '../../features/register/ui/register_screen.dart';
 import '../../features/app/ui/app_shell.dart';
 import '../../features/scan/ui/scan_screen.dart';
 import '../../features/store/ui/store_screen.dart';
@@ -21,21 +21,21 @@ class AppRouter {
       refreshListenable: GoRouterRefreshStream(authRepository.authStateChanges),
       redirect: (context, state) {
         final isLoggedIn = authRepository.isLoggedIn;
-
         final loc = state.matchedLocation;
 
-        final isAuthPage = loc == RouteNames.loginPath || loc == RouteNames.registerPath || loc == RouteNames.onboardingPath;
+        final isAuthPage = loc == RouteNames.loginPath ||
+            loc == RouteNames.registerPath ||
+            loc == RouteNames.onboardingPath;
+
         final isSplash = loc == RouteNames.splashPath;
 
         if (isSplash) return null;
 
         if (!isLoggedIn) {
-          // If user is not logged in, allow onboarding/auth pages only
           if (isAuthPage) return null;
           return RouteNames.onboardingPath;
         }
 
-        // If logged in, prevent going back to auth pages
         if (isAuthPage) return RouteNames.scanPath;
 
         return null;
@@ -54,42 +54,40 @@ class AppRouter {
         GoRoute(
           name: RouteNames.login,
           path: RouteNames.loginPath,
-          builder: (context, __) => const LoginScreen(),
+          builder: (_, __) => const LoginPage(),
         ),
         GoRoute(
           name: RouteNames.register,
           path: RouteNames.registerPath,
-          builder: (context, __) => const RegisterScreen(),
+          builder: (_, __) => const RegisterPage(),
         ),
-
-        /// Bottom tabs shell
         ShellRoute(
           builder: (context, state, child) => AppShell(child: child),
           routes: [
             GoRoute(
               name: RouteNames.scan,
               path: RouteNames.scanPath,
-              builder: (_, __) => const ScanScreen(),
+              builder: (_, __) => const ScanPage(),
             ),
             GoRoute(
               name: RouteNames.store,
               path: RouteNames.storePath,
-              builder: (_, __) => const StoreScreen(),
+              builder: (_, __) => const StorePage(),
             ),
             GoRoute(
               name: RouteNames.leaderboard,
               path: RouteNames.leaderboardPath,
-              builder: (_, __) => const LeaderboardScreen(),
+              builder: (_, __) => const LeaderboardPage(),
             ),
             GoRoute(
               name: RouteNames.map,
               path: RouteNames.mapPath,
-              builder: (_, __) => const MapScreen(),
+              builder: (_, __) => const MapPage(),
             ),
             GoRoute(
               name: RouteNames.profile,
               path: RouteNames.profilePath,
-              builder: (context, __) => const ProfileScreen(),
+              builder: (_, __) => const ProfilePage(),
             ),
           ],
         ),
@@ -98,16 +96,18 @@ class AppRouter {
   }
 }
 
-/// Helper: go_router wants a Listenable for refresh; this is standard pattern.
 class GoRouterRefreshStream extends ChangeNotifier {
   GoRouterRefreshStream(Stream<dynamic> stream) {
-    _sub = stream.asBroadcastStream().listen((_) => notifyListeners());
+    _subscription = stream.asBroadcastStream().listen((_) {
+      notifyListeners();
+    });
   }
-  late final StreamSubscription<dynamic> _sub;
+
+  late final StreamSubscription<dynamic> _subscription;
 
   @override
   void dispose() {
-    _sub.cancel();
+    _subscription.cancel();
     super.dispose();
   }
 }
