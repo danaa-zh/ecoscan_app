@@ -89,7 +89,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     const SizedBox(height: 54),
                     _AuthTextField(
-                      hint: 'Введите логин',
+                      hint: 'Введите email',
                       controller: _loginCtrl,
                     ),
                     const SizedBox(height: 12),

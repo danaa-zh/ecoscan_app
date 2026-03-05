@@ -84,7 +84,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     const SizedBox(height: 16),
                     const Text(
-                      'Добро пожаловать, Дана!\nТвой уровень: новичок',
+                      'Добро пожаловать!',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontFamily: 'Inter',
@@ -94,11 +94,11 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                     ),
                     const SizedBox(height: 54),
-                    _AuthTextField(hint: 'Введите имя', controller: _nameCtrl),
+                    _AuthTextField(hint: 'Введите имя и фамилию', controller: _nameCtrl),
                     const SizedBox(height: 12),
-                    _AuthTextField(hint: 'Введите фамилию', controller: _surnameCtrl),
+                    _AuthTextField(hint: 'Введите email', controller: _surnameCtrl),
                     const SizedBox(height: 12),
-                    _AuthTextField(hint: 'Введите логин', controller: _loginCtrl),
+                    _AuthTextField(hint: 'Введите username', controller: _loginCtrl),
                     const SizedBox(height: 12),
                     _AuthTextField(hint: 'Введите пароль', obscureText: true, controller: _passCtrl),
                     const SizedBox(height: 12),
