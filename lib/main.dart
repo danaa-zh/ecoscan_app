@@ -11,17 +11,14 @@ Future<void> main() async {
 
   try {
     await dotenv.load(fileName: ".env");
-  } catch (_) {
-    // .env optional
+    AppLog.i('.env loaded successfully');
+  } catch (e) {
+    AppLog.e('Failed to load .env', e);
   }
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
-  FirebaseFirestore.instance.collection('test').add({
-  'hello': 'world',
-});
 
   AppLog.i('Firebase initialized');
 

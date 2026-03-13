@@ -1,10 +1,9 @@
+import 'package:ecoscan_app/core/router/route_names.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ecoscan_app/core/theme/app_colors.dart';
-import 'package:ecoscan_app/features/login/ui/login_screen.dart';
-import 'package:ecoscan_app/features/onboarding/ui/onboarding_screen.dart';
-import 'package:ecoscan_app/features/profile/ui/profile_screen.dart';
 import 'package:ecoscan_app/features/auth/bloc/auth_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -15,7 +14,7 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _nameCtrl = TextEditingController();
-  final TextEditingController _surnameCtrl = TextEditingController();
+  final TextEditingController _emailCtrl = TextEditingController();
   final TextEditingController _loginCtrl = TextEditingController();
   final TextEditingController _passCtrl = TextEditingController();
   final TextEditingController _repeatCtrl = TextEditingController();
@@ -23,7 +22,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   void dispose() {
     _nameCtrl.dispose();
-    _surnameCtrl.dispose();
+    _emailCtrl.dispose();
     _loginCtrl.dispose();
     _passCtrl.dispose();
     _repeatCtrl.dispose();
@@ -35,18 +34,16 @@ class _RegisterPageState extends State<RegisterPage> {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state.status == AuthStatus.success) {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => const ProfilePage()),
-          );
+          context.go(RouteNames.profilePath);
         }
         if (state.status == AuthStatus.failure && state.error != null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.error!)),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.error!)));
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.lightGreen,
+        backgroundColor: AppColors.greenBg,
         body: SafeArea(
           child: Stack(
             children: [
@@ -54,13 +51,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 top: 16,
                 left: 20,
                 child: GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (_) => const OnboardingScreen(),
-                      ),
-                    );
-                  },
+                  onTap: () => context.go(RouteNames.onboardingPath),
                   child: Image.asset(
                     'assets/green-left-arrow.png',
                     width: 16,
@@ -94,34 +85,53 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                     ),
                     const SizedBox(height: 54),
-                    _AuthTextField(hint: 'Введите имя и фамилию', controller: _nameCtrl),
+                    _AuthTextField(
+                      hint: 'Введите имя и фамилию',
+                      controller: _nameCtrl,
+                    ),
                     const SizedBox(height: 12),
-                    _AuthTextField(hint: 'Введите email', controller: _surnameCtrl),
+                    _AuthTextField(
+                      hint: 'Введите email',
+                      controller: _emailCtrl,
+                    ),
                     const SizedBox(height: 12),
-                    _AuthTextField(hint: 'Введите username', controller: _loginCtrl),
+                    _AuthTextField(
+                      hint: 'Введите username',
+                      controller: _loginCtrl,
+                    ),
                     const SizedBox(height: 12),
-                    _AuthTextField(hint: 'Введите пароль', obscureText: true, controller: _passCtrl),
+                    _AuthTextField(
+                      hint: 'Введите пароль',
+                      obscureText: true,
+                      controller: _passCtrl,
+                    ),
                     const SizedBox(height: 12),
-                    _AuthTextField(hint: 'Повторите пароль', obscureText: true, controller: _repeatCtrl),
+                    _AuthTextField(
+                      hint: 'Повторите пароль',
+                      obscureText: true,
+                      controller: _repeatCtrl,
+                    ),
                     const Spacer(),
                     SizedBox(
                       width: 345,
                       height: 51,
                       child: FilledButton(
-                        onPressed: context.watch<AuthBloc>().state.status == AuthStatus.loading
+                        onPressed:
+                            context.watch<AuthBloc>().state.status ==
+                                AuthStatus.loading
                             ? null
                             : () {
                                 final login = _loginCtrl.text.trim();
                                 context.read<AuthBloc>().add(
-                                      AuthRegisterRequested(
-                                        name: _nameCtrl.text.trim(),
-                                        surname: _surnameCtrl.text.trim(),
-                                        login: login,
-                                        email: login,
-                                        password: _passCtrl.text,
-                                        repeatPassword: _repeatCtrl.text,
-                                      ),
-                                    );
+                                  AuthRegisterRequested(
+                                    name: _nameCtrl.text.trim(),
+                                    surname: '',
+                                    email: _emailCtrl.text.trim(),
+                                    login: login,
+                                    password: _passCtrl.text,
+                                    repeatPassword: _repeatCtrl.text,
+                                  ),
+                                );
                               },
                         style: FilledButton.styleFrom(
                           backgroundColor: AppColors.btn,
@@ -129,11 +139,15 @@ class _RegisterPageState extends State<RegisterPage> {
                             borderRadius: BorderRadius.circular(13),
                           ),
                         ),
-                        child: context.watch<AuthBloc>().state.status == AuthStatus.loading
+                        child:
+                            context.watch<AuthBloc>().state.status ==
+                                AuthStatus.loading
                             ? const SizedBox(
                                 width: 22,
                                 height: 22,
-                                child: CircularProgressIndicator(strokeWidth: 2),
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
                               )
                             : const Text(
                                 'Зарегистрироваться',

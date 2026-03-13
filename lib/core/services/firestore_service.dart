@@ -6,7 +6,8 @@ class FirestoreService {
 
   final FirebaseFirestore _db;
 
-  CollectionReference<Map<String, dynamic>> users() => _db.collection('users');
+  CollectionReference<Map<String, dynamic>> users() =>
+      _db.collection('users');
 
   CollectionReference<Map<String, dynamic>> recycleEvents() =>
       _db.collection('recycle_events');
@@ -20,6 +21,10 @@ class FirestoreService {
     await users().doc(uid).set(data, SetOptions(merge: true));
   }
 
+  Future<void> updateUser(String uid, Map<String, dynamic> data) async {
+    await users().doc(uid).update(data);
+  }
+
   Future<void> addRecycleEventAndUpdateBonus({
     required String uid,
     required Map<String, dynamic> eventData,
@@ -29,11 +34,14 @@ class FirestoreService {
       final userRef = users().doc(uid);
       final userSnap = await tx.get(userRef);
 
-      final current = (userSnap.data()?['bonusBalance'] as num?)?.toInt() ?? 0;
+      final current =
+          (userSnap.data()?['bonusBalance'] as num?)?.toInt() ?? 0;
 
       tx.set(
         userRef,
-        {'bonusBalance': current + bonusDelta},
+        {
+          'bonusBalance': current + bonusDelta,
+        },
         SetOptions(merge: true),
       );
 

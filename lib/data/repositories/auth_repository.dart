@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart' as fb;
-
 import '../../core/services/firebase_auth_service.dart';
 import '../../core/services/firestore_service.dart';
 import '../models/user_model.dart';
@@ -29,7 +28,6 @@ class AuthRepository {
         if (profile != null) {
           yield profile;
         } else {
-          // Create minimal profile if absent
           final now = DateTime.now().millisecondsSinceEpoch;
           final created = UserModel(
             uid: u.uid,

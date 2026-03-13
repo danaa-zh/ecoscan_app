@@ -3,6 +3,9 @@
         android:label="ecoscan_app"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <meta-data
+        android:name="com.google.android.geo.API_KEY"
+        android:value="AIzaSyCJu8vNjHF2KV5QY8LTdQouDByZfvloo9o"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

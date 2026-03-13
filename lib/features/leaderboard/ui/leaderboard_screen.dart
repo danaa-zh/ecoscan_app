@@ -60,7 +60,6 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
 
-            /// TITLE
             Padding(
               padding:
                   const EdgeInsets.only(top: 63, left: 29, right: 29),
@@ -81,7 +80,6 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
 
             const SizedBox(height: 29),
 
-            /// FILTER
             Container(
               width: 335,
               height: 41,
@@ -161,7 +159,6 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
 
       const SizedBox(height: 29),
 
-      /// TOP 1-3
       ...List.generate(3, (i) {
         final data = topUsers[i];
         final colors = [
@@ -178,7 +175,6 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
               clipBehavior: Clip.none,
               children: [
 
-                /// RECTANGLE (background)
                 Positioned(
                   top: 7,
                   left: 5,
@@ -192,7 +188,6 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
                     child: Row(
                       children: [
 
-                        /// AVATAR
                         Container(
                           width: 44,
                           height: 46,
@@ -271,7 +266,6 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
                   ),
                 ),
 
-                /// NUMBER ROUND
                 Positioned(
                   right: 310,
                   bottom: 45,
@@ -301,7 +295,6 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
 
       const SizedBox(height: 25),
 
-      /// OTHER USERS CENTERED
       ...users.asMap().entries.map((entry) {
         final index = entry.key;
         final data = entry.value;

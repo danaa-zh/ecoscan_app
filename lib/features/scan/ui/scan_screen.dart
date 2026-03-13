@@ -1,21 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:ecoscan_app/core/theme/app_colors.dart';
-import 'package:ecoscan_app/features/profile/ui/profile_screen.dart';
 import 'package:ecoscan_app/widgets/bottom_nav_bar.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ecoscan_app/core/router/route_names.dart';
 
 class ScanPage extends StatelessWidget {
   const ScanPage({super.key});
 
-  void _goToProfile(BuildContext context) {
-    Navigator.of(context).pushReplacement(
-      PageRouteBuilder(
-        pageBuilder: (_, __, ___) => const ProfilePage(),
-        transitionDuration: Duration.zero,
-        reverseTransitionDuration: Duration.zero,
-      ),
-    );
-  }
+void _goToProfile(BuildContext context) {
+  context.go(RouteNames.profilePath);
+}
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +18,6 @@ class ScanPage extends StatelessWidget {
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          /// REAL QR CAMERA
           Positioned.fill(
             child: MobileScanner(
               fit: BoxFit.cover,
@@ -41,7 +35,6 @@ class ScanPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Top app bar
                 SizedBox(
                   height: 45,
                   width: double.infinity,
@@ -97,7 +90,6 @@ class ScanPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 7),
-                // White notification rectangle
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 19),
                   child: Container(
@@ -122,7 +114,6 @@ class ScanPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 11),
-                // Accent account rectangle
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 19),
                   child: GestureDetector(

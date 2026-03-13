@@ -11,7 +11,7 @@ class RecycleEventModel extends Equatable {
   });
 
   final String uid;
-  final String type; // plastic/can/glass...
+  final String type; 
   final int count;
   final int bonusEarned;
   final int createdAtMillis;

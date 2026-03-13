@@ -22,7 +22,6 @@ class _StorePageState extends State<StorePage> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    // Ensure search + spacer + filter fit available width.
     final double filterWidth = 80;
     final double horizontalPadding = 33;
     final double spacer = 5;
@@ -47,7 +46,6 @@ class _StorePageState extends State<StorePage> {
         top: true,
         bottom: false,
         child: SingleChildScrollView(
-          // Extra space so content never collides with bottom nav.
           padding: const EdgeInsets.only(bottom: 100),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 33),
@@ -76,7 +74,6 @@ class _StorePageState extends State<StorePage> {
                 const SizedBox(height: 7),
                 Row(
                   children: [
-                    // Search field
                     Container(
                       width: searchWidth,
                       height: 28,
@@ -121,7 +118,6 @@ class _StorePageState extends State<StorePage> {
                       ),
                     ),
                     const SizedBox(width: 5),
-                    // Filter button (same as in profile history)
                     SizedBox(
                       width: filterWidth,
                       height: 28,
@@ -162,7 +158,6 @@ class _StorePageState extends State<StorePage> {
                   ],
                 ),
                 const SizedBox(height: 16),
-                // Items grid
                 Wrap(
                   spacing: 0,
                   runSpacing: 5,
@@ -229,7 +224,6 @@ class _StoreItemCardState extends State<_StoreItemCard> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Image with heart overlay
               Stack(
                 children: [
                   SizedBox(

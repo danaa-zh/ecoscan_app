@@ -1,7 +1,7 @@
+import 'package:ecoscan_app/core/router/route_names.dart';
 import 'package:ecoscan_app/core/theme/app_colors.dart';
-import 'package:ecoscan_app/features/register/ui/register_screen.dart';
-import 'package:ecoscan_app/features/login/ui/login_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});
@@ -40,13 +40,7 @@ class OnboardingScreen extends StatelessWidget {
                   width: 345,
                   height: 51,
                   child: FilledButton(
-                    onPressed: () {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (_) => const RegisterPage(),
-                        ),
-                      );
-                    },
+                    onPressed: () => context.go(RouteNames.registerPath),
                     style: FilledButton.styleFrom(
                       backgroundColor: AppColors.btn,
                       foregroundColor: AppColors.white,
@@ -68,13 +62,7 @@ class OnboardingScreen extends StatelessWidget {
                   width: 345,
                   height: 51,
                   child: OutlinedButton(
-                    onPressed: () {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (_) => const LoginPage(),
-                        ),
-                      );
-                    },
+                    onPressed: () => context.go(RouteNames.loginPath),
                     style: OutlinedButton.styleFrom(
                       backgroundColor: Colors.transparent,
                       foregroundColor: AppColors.btnHaveAccText,

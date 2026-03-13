@@ -14,4 +14,5 @@ class AppColors {
   static const Color accent = Color(0xFFFFB902);
   static const Color bonus = Color(0xFF3FD81D);
   static const Color placeholder = Color(0xFF6A867E);
+  static const Color greenBg = Color(0xFFB5D7BB);
 }

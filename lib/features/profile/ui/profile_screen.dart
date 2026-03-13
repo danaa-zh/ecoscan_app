@@ -1,6 +1,10 @@
 import 'package:ecoscan_app/core/theme/app_colors.dart';
+import 'package:ecoscan_app/features/profile/bloc/profile_bloc.dart';
+import 'package:ecoscan_app/features/profile/ui/edit_profile_screen.dart';
 import 'package:ecoscan_app/widgets/bottom_nav_bar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -10,192 +14,234 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  int _tabIndex = 0; // 0 = achievements, 1 = tasks, 2 = history
+  int _tabIndex = 0;
+
+@override
+void initState() {
+  super.initState();
+  final uid = FirebaseAuth.instance.currentUser?.uid;
+  if (uid != null) {
+    context.read<ProfileBloc>().loadProfile(uid);
+  }
+}
+
+  String _formatCreatedAt(dynamic createdAtMillis) {
+    if (createdAtMillis == null) return 'дата создания неизвестна';
+
+    final date = DateTime.fromMillisecondsSinceEpoch(createdAtMillis as int);
+    return 'было создано в ${date.year}';
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.white,
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header: username + subtitle + avatar
-            Padding(
-              padding: const EdgeInsets.only(top: 35, left: 39, right: 37),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Column(
+    return BlocBuilder<ProfileBloc, Map<String, dynamic>?>(
+      builder: (context, user) {
+        final username = user?['username'] ?? 'loading...';
+        final createdAtText = _formatCreatedAt(user?['createdAtMillis']);
+        final avatarUrl = user?['avatarUrl'];
+
+        return Scaffold(
+          backgroundColor: AppColors.white,
+          body: SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 35, left: 39, right: 37),
+                  child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      SizedBox(height: 21), // 56 (title top) - 35 (avatar top)
-                      Text(
-                        'danaa_zh',
-                        style: TextStyle(
-                          // fontFamily: 'Inter',
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.brandGreen,
-                        ),
-                      ),
-                      Text(
-                        'было создано в 2026',
-                        style: TextStyle(
-                          // fontFamily: 'Inter',
-                          fontSize: 8,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.textSecondary,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const Spacer(),
-                  Container(
-                    width: 65,
-                    height: 65,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: AppColors.brandGreen,
-                        width: 2,
-                      ),
-                      image: const DecorationImage(
-                        image: AssetImage('assets/avatar.jpg'),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 25),
-            // Buttons row + bonus button
-            Padding(
-              padding: const EdgeInsets.only(left: 39, right: 37),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
                     children: [
-                      SizedBox(
-                        width: 186,
-                        height: 26,
-                        child: OutlinedButton(
-                          onPressed: () {},
-                          style: OutlinedButton.styleFrom(
-                            side: const BorderSide(color: AppColors.btn, width: 1),
-                            foregroundColor: AppColors.black,
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            textStyle: const TextStyle(
-                              // fontFamily: 'Inter',
-                              fontSize: 10,
-                              fontWeight: FontWeight.w400,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 21),
+                          Text(
+                            username,
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.brandGreen,
                             ),
                           ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Image.asset(
-                                'assets/edit-icon.png',
-                                width: 15,
-                                height: 12,
-                              ),
-                              const SizedBox(width: 6),
-                              const Text('Редактировать профиль'),
-                            ],
+                          Text(
+                            createdAtText,
+                            style: const TextStyle(
+                              fontSize: 8,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const Spacer(),
+                      Container(
+                        width: 65,
+                        height: 65,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: AppColors.brandGreen,
+                            width: 2,
                           ),
                         ),
+                        child: ClipOval(
+                          child: avatarUrl != null && avatarUrl.toString().isNotEmpty
+                              ? Image.network(
+                                  avatarUrl,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (_, __, ___) => const Icon(
+                                    Icons.person,
+                                    size: 36,
+                                    color: AppColors.brandGreen,
+                                  ),
+                                )
+                              : const Icon(
+                                  Icons.person,
+                                  size: 36,
+                                  color: AppColors.brandGreen,
+                                ),
+                        ),
                       ),
-                      const SizedBox(width: 4),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 25),
+                Padding(
+                  padding: const EdgeInsets.only(left: 39, right: 37),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: 186,
+                            height: 26,
+                            child: OutlinedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => const EditProfilePage(),
+                                  ),
+                                );
+                              },
+                              style: OutlinedButton.styleFrom(
+                                side: const BorderSide(
+                                  color: AppColors.btn,
+                                  width: 1,
+                                ),
+                                foregroundColor: AppColors.black,
+                                padding: const EdgeInsets.symmetric(horizontal: 8),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                textStyle: const TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Image.asset(
+                                    'assets/edit-icon.png',
+                                    width: 15,
+                                    height: 12,
+                                  ),
+                                  const SizedBox(width: 6),
+                                  const Text('Редактировать профиль'),
+                                ],
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 4),
+                          SizedBox(
+                            width: 127,
+                            height: 26,
+                            child: OutlinedButton(
+                              onPressed: () {},
+                              style: OutlinedButton.styleFrom(
+                                side: const BorderSide(
+                                  color: AppColors.btn,
+                                  width: 1,
+                                ),
+                                foregroundColor: AppColors.black,
+                                padding: const EdgeInsets.symmetric(horizontal: 8),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                textStyle: const TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Image.asset(
+                                    'assets/settings-icon.png',
+                                    width: 16,
+                                    height: 12,
+                                  ),
+                                  const SizedBox(width: 6),
+                                  const Text('Настройки'),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
                       SizedBox(
-                        width: 127,
+                        width: 317,
                         height: 26,
-                        child: OutlinedButton(
+                        child: FilledButton(
                           onPressed: () {},
-                          style: OutlinedButton.styleFrom(
-                            side: const BorderSide(color: AppColors.btn, width: 1),
-                            foregroundColor: AppColors.black,
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                          style: FilledButton.styleFrom(
+                            backgroundColor: AppColors.btn,
+                            foregroundColor: AppColors.white,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(4),
                             ),
                             textStyle: const TextStyle(
-                              // fontFamily: 'Inter',
                               fontSize: 10,
                               fontWeight: FontWeight.w400,
                             ),
                           ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Image.asset(
-                                'assets/settings-icon.png',
-                                width: 16,
-                                height: 12,
-                              ),
-                              const SizedBox(width: 6),
-                              const Text('Настройки'),
-                            ],
+                          child: Text(
+                            'Бонусы: ${user?['bonusBalance'] ?? 0}',
                           ),
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 4),
-                  SizedBox(
-                    width: 317,
-                    height: 26,
-                    child: FilledButton(
-                      onPressed: () {},
-                      style: FilledButton.styleFrom(
-                        backgroundColor: AppColors.btn,
-                        foregroundColor: AppColors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        textStyle: const TextStyle(
-                          // fontFamily: 'Inter',
-                          fontSize: 10,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                      child: const Text('Бонусы'),
-                    ),
+                ),
+                const SizedBox(height: 15),
+                _ProfileTabs(
+                  index: _tabIndex,
+                  onChanged: (i) => setState(() => _tabIndex = i),
+                ),
+                const SizedBox(height: 10),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: _buildTabContent(),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            const SizedBox(height: 15),
-            // Tabs row + animated underline
-            _ProfileTabs(
-              index: _tabIndex,
-              onChanged: (i) => setState(() => _tabIndex = i),
-            ),
-            const SizedBox(height: 10),
-            // Tab content
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: _buildTabContent(),
-              ),
-            ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: const EcoBottomNavBar(active: BottomNavItem.profile),
+          ),
+          bottomNavigationBar: const EcoBottomNavBar(active: BottomNavItem.profile),
+        );
+      },
     );
   }
 
   Widget _buildTabContent() {
     switch (_tabIndex) {
       case 0:
-        // Achievements empty state
         return Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: const [
@@ -205,7 +251,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 'У вас пока нету достижений',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  // fontFamily: 'Inter',
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
                   color: AppColors.black,
@@ -219,7 +264,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 'вам начислялись бонусы и получать награды',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  // fontFamily: 'Inter',
                   fontSize: 10,
                   fontWeight: FontWeight.w400,
                   color: AppColors.black,
@@ -229,117 +273,85 @@ class _ProfilePageState extends State<ProfilePage> {
           ],
         );
       case 1:
-        // Weekly tasks with progress bars
         return ListView(
           padding: const EdgeInsets.only(top: 30),
           children: const [
             _TaskItem(
               imagePath: 'assets/bottle-icon.png',
               label: 'пластиковые бутылки',
-              progressFraction: 0.5, // 5/10
+              progressFraction: 0.5,
               progressColor: Color(0xFF2175AD),
             ),
             SizedBox(height: 16),
             _TaskItem(
               imagePath: 'assets/can-icon.png',
               label: 'алюминевые банки',
-              progressFraction: 0.3, // 3/10
+              progressFraction: 0.3,
               progressColor: Color(0xFF282435),
             ),
             SizedBox(height: 16),
             _TaskItem(
               imagePath: 'assets/box-icon.png',
               label: 'тетрапакет',
-              progressFraction: 0.7, // 7/10
+              progressFraction: 0.7,
               progressColor: Color(0xFF26AF61),
             ),
             SizedBox(height: 16),
             _TaskItem(
               imagePath: 'assets/glass-icon.png',
               label: 'стеклянные бутылки',
-              progressFraction: 0.2, // 3/10 (approx)
+              progressFraction: 0.2,
               progressColor: Color(0xFFD72221),
             ),
           ],
         );
       case 2:
-        // History with filter and list
         return ListView(
-          children: [
-            // Filter button row
+          children: const [
             Padding(
-              padding: const EdgeInsets.only(right: 24),
+              padding: EdgeInsets.only(right: 24),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   SizedBox(
                     width: 80,
                     height: 28,
-                    child: OutlinedButton(
-                      onPressed: () {},
-                      style: OutlinedButton.styleFrom(
-                        backgroundColor: Colors.transparent,
-                        side: const BorderSide(color: AppColors.theGrey, width: 1),
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        foregroundColor: AppColors.theGrey,
-                        textStyle: const TextStyle(
-                          // fontFamily: 'Inter',
-                          fontSize: 10,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Image.asset(
-                            'assets/filter.png',
-                            width: 16,
-                            height: 16,
-                          ),
-                          const SizedBox(width: 2),
-                          const Text('Фильтр'),
-                        ],
-                      ),
-                    ),
+                    child: _FilterButton(),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 16),
-            const Padding(
+            SizedBox(height: 16),
+            Padding(
               padding: EdgeInsets.only(left: 37, bottom: 7),
               child: Text(
                 'За последнюю неделю',
                 style: TextStyle(
-                  // fontFamily: 'Inter',
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
                   color: AppColors.black,
                 ),
               ),
             ),
-            const _HistoryItem(
+            _HistoryItem(
               title: '5 пластиковые бутылки',
               subtitle: '21.02.2026 11:45 ТРЦ “Mega”',
               bonusText: '+ 50 бонусов',
             ),
-            const SizedBox(height: 5),
-            const _HistoryItem(
+            SizedBox(height: 5),
+            _HistoryItem(
               title: '3 алюминевые банки',
               subtitle: '20.02.2026 11:45 Университет “МУИТ”',
               bonusText: '+ 30 бонусов',
             ),
-            const SizedBox(height: 5),
-            const _HistoryItem(
+            SizedBox(height: 5),
+            _HistoryItem(
               title: '7 тетрапакет',
               subtitle: '18.02.2026 11:45 Банк “Halyk”',
               bonusText: '+ 70 бонусов',
             ),
-            const SizedBox(height: 5),
-            const _HistoryItem(
+            SizedBox(height: 5),
+            _HistoryItem(
               title: '3 стеклянные бутылки',
               subtitle: '17.02.2026 11:45 Колледж “МАБ”',
               bonusText: '+ 30 бонусов',
@@ -349,6 +361,45 @@ class _ProfilePageState extends State<ProfilePage> {
       default:
         return const SizedBox.shrink();
     }
+  }
+}
+
+class _FilterButton extends StatelessWidget {
+  const _FilterButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return OutlinedButton(
+      onPressed: () {},
+      style: OutlinedButton.styleFrom(
+        backgroundColor: Colors.transparent,
+        side: const BorderSide(
+          color: AppColors.theGrey,
+          width: 1,
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4),
+        ),
+        foregroundColor: AppColors.theGrey,
+        textStyle: const TextStyle(
+          fontSize: 10,
+          fontWeight: FontWeight.w400,
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Image.asset(
+            'assets/filter.png',
+            width: 16,
+            height: 16,
+          ),
+          const SizedBox(width: 2),
+          const Text('Фильтр'),
+        ],
+      ),
+    );
   }
 }
 
@@ -391,7 +442,6 @@ class _ProfileTabs extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 4),
-        // Grey baseline with animated green segment
         SizedBox(
           width: double.infinity,
           height: 4,
@@ -451,7 +501,6 @@ class _TabText extends StatelessWidget {
       child: Text(
         label,
         style: TextStyle(
-          // fontFamily: 'Inter',
           fontSize: 10,
           fontWeight: FontWeight.w400,
           color: isActive ? AppColors.black : AppColors.theGrey,
@@ -492,10 +541,7 @@ class _TaskItem extends StatelessWidget {
                 border: Border.all(color: AppColors.brandGreen, width: 1.5),
               ),
               child: Center(
-                child: Image.asset(
-                  imagePath,
-                  fit: BoxFit.contain,
-                ),
+                child: Image.asset(imagePath, fit: BoxFit.contain),
               ),
             ),
             const SizedBox(width: 14),
@@ -507,7 +553,6 @@ class _TaskItem extends StatelessWidget {
                   Text(
                     label,
                     style: const TextStyle(
-                      // fontFamily: 'Inter',
                       fontSize: 10,
                       fontWeight: FontWeight.w600,
                       color: AppColors.brandGreen,
@@ -530,9 +575,7 @@ class _TaskItem extends StatelessWidget {
                         alignment: Alignment.centerLeft,
                         child: FractionallySizedBox(
                           widthFactor: progressFraction,
-                          child: Container(
-                            color: progressColor,
-                          ),
+                          child: Container(color: progressColor),
                         ),
                       ),
                     ),
@@ -597,7 +640,6 @@ class _HistoryItem extends StatelessWidget {
                       Text(
                         title,
                         style: const TextStyle(
-                          // fontFamily: 'Inter',
                           fontSize: 10,
                           fontWeight: FontWeight.w400,
                           color: AppColors.black,
@@ -606,7 +648,6 @@ class _HistoryItem extends StatelessWidget {
                       Text(
                         subtitle,
                         style: const TextStyle(
-                          // fontFamily: 'Inter',
                           fontSize: 10,
                           fontWeight: FontWeight.w400,
                           color: AppColors.theGrey,
@@ -621,7 +662,6 @@ class _HistoryItem extends StatelessWidget {
                       child: Text(
                         bonusText!,
                         style: const TextStyle(
-                          // fontFamily: 'Inter',
                           fontSize: 10,
                           fontWeight: FontWeight.w400,
                           color: AppColors.bonus,

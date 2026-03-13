@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ecoscan_app/core/theme/app_colors.dart';
-import 'package:ecoscan_app/features/onboarding/ui/onboarding_screen.dart';
-import 'package:ecoscan_app/features/profile/ui/profile_screen.dart';
 import 'package:ecoscan_app/features/auth/bloc/auth_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ecoscan_app/core/router/route_names.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -13,13 +13,13 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final TextEditingController _loginCtrl = TextEditingController();
+  final TextEditingController _emailCtrl = TextEditingController();
   final TextEditingController _passCtrl = TextEditingController();
   final TextEditingController _repeatCtrl = TextEditingController();
 
   @override
   void dispose() {
-    _loginCtrl.dispose();
+    _emailCtrl.dispose();
     _passCtrl.dispose();
     _repeatCtrl.dispose();
     super.dispose();
@@ -30,18 +30,16 @@ class _LoginPageState extends State<LoginPage> {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state.status == AuthStatus.success) {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => const ProfilePage()),
-          );
+          context.go(RouteNames.profilePath);
         }
         if (state.status == AuthStatus.failure && state.error != null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.error!)),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.error!)));
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.lightGreen,
+        backgroundColor: AppColors.greenBg,
         body: SafeArea(
           child: Stack(
             children: [
@@ -49,13 +47,7 @@ class _LoginPageState extends State<LoginPage> {
                 top: 16,
                 left: 20,
                 child: GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (_) => const OnboardingScreen(),
-                      ),
-                    );
-                  },
+                  onTap: () => context.go(RouteNames.onboardingPath),
                   child: Image.asset(
                     'assets/green-left-arrow.png',
                     width: 16,
@@ -90,7 +82,7 @@ class _LoginPageState extends State<LoginPage> {
                     const SizedBox(height: 54),
                     _AuthTextField(
                       hint: 'Введите email',
-                      controller: _loginCtrl,
+                      controller: _emailCtrl,
                     ),
                     const SizedBox(height: 12),
                     _AuthTextField(
@@ -105,10 +97,7 @@ class _LoginPageState extends State<LoginPage> {
                       controller: _repeatCtrl,
                     ),
                     const Spacer(),
-                    _LoginButtons(
-                      loginCtrl: _loginCtrl,
-                      passCtrl: _passCtrl,
-                    ),
+                    _LoginButtons(emailCtrl: _emailCtrl, passCtrl: _passCtrl),
                     const SizedBox(height: 37),
                   ],
                 ),
@@ -176,12 +165,9 @@ class _AuthTextField extends StatelessWidget {
 }
 
 class _LoginButtons extends StatelessWidget {
-  const _LoginButtons({
-    required this.loginCtrl,
-    required this.passCtrl,
-  });
+  const _LoginButtons({required this.emailCtrl, required this.passCtrl});
 
-  final TextEditingController loginCtrl;
+  final TextEditingController emailCtrl;
   final TextEditingController passCtrl;
 
   @override
@@ -199,14 +185,14 @@ class _LoginButtons extends StatelessWidget {
             onPressed: disabled
                 ? null
                 : () {
-                    final login = loginCtrl.text.trim();
+                    final login = emailCtrl.text.trim();
                     context.read<AuthBloc>().add(
-                          AuthEmailSignInRequested(
-                            login: login,
-                            email: login,
-                            password: passCtrl.text,
-                          ),
-                        );
+                      AuthEmailSignInRequested(
+                        login: login,
+                        email: login,
+                        password: passCtrl.text,
+                      ),
+                    );
                   },
             style: FilledButton.styleFrom(
               backgroundColor: AppColors.btn,
@@ -240,7 +226,9 @@ class _LoginButtons extends StatelessWidget {
             onPressed: disabled
                 ? null
                 : () {
-                    context.read<AuthBloc>().add(const AuthGoogleSignInRequested());
+                    context.read<AuthBloc>().add(
+                      const AuthGoogleSignInRequested(),
+                    );
                   },
             style: FilledButton.styleFrom(
               backgroundColor: AppColors.white,

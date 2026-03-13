@@ -12,7 +12,20 @@
           "package_name": "com.example.ecoscan_app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "481692481897-tdcvl0eochb5dpfe0ckmkohrbc9skegs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ecoscan_app",
+            "certificate_hash": "72fa0399eb66f9ac9f9c1bc4d49195441a1d3e81"
+          }
+        },
+        {
+          "client_id": "481692481897-mo586pcm50rm48e7pfqatu6vo7booc2s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDEeR7FaZgS-5C5MvYQyiaMzmcB1nvvUrc"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "481692481897-mo586pcm50rm48e7pfqatu6vo7booc2s.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "481692481897-ll4hgctm4meiudbh6n0ds2sld0e6ogup.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.ecoscanApp"
+              }
+            }
+          ]
         }
       }
     }

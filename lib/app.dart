@@ -7,6 +7,8 @@ import 'data/repositories/recycle_repository.dart';
 import 'core/services/firebase_auth_service.dart';
 import 'core/services/firestore_service.dart';
 import 'features/app/bloc/app_bloc.dart';
+import 'features/auth/bloc/auth_bloc.dart';
+import 'features/profile/bloc/profile_bloc.dart';
 
 class EcoScanApp extends StatelessWidget {
   const EcoScanApp({super.key});
@@ -32,9 +34,23 @@ class EcoScanApp extends StatelessWidget {
         RepositoryProvider<AuthRepository>.value(value: authRepo),
         RepositoryProvider<UserRepository>.value(value: userRepo),
         RepositoryProvider<RecycleRepository>.value(value: recycleRepo),
+        RepositoryProvider<FirestoreService>.value(value: firestore),
       ],
-      child: BlocProvider(
-        create: (_) => AppBloc(authRepository: authRepo),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (_) => AppBloc(authRepository: authRepo),
+          ),
+          BlocProvider(
+            create: (_) => AuthBloc(
+              authService: authService,
+              firestore: firestore,
+            ),
+          ),
+          BlocProvider(
+            create: (_) => ProfileBloc(firestore),
+          ),
+        ],
         child: MaterialApp.router(
           debugShowCheckedModeBanner: false,
           title: 'EcoScan',

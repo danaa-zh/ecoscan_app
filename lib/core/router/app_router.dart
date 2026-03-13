@@ -4,8 +4,8 @@ import 'package:go_router/go_router.dart';
 import '../../data/repositories/auth_repository.dart';
 import '../../features/splash/ui/splash_screen.dart';
 import '../../features/onboarding/ui/onboarding_screen.dart';
-import '../../features/login/ui/login_screen.dart';
-import '../../features/register/ui/register_screen.dart';
+import '../../features/auth/ui/login_screen.dart';
+import '../../features/auth/ui/register_screen.dart';
 import '../../features/app/ui/app_shell.dart';
 import '../../features/scan/ui/scan_screen.dart';
 import '../../features/store/ui/store_screen.dart';
@@ -36,7 +36,7 @@ class AppRouter {
           return RouteNames.onboardingPath;
         }
 
-        if (isAuthPage) return RouteNames.scanPath;
+        if (isAuthPage) return RouteNames.profilePath;
 
         return null;
       },
@@ -44,22 +44,30 @@ class AppRouter {
         GoRoute(
           name: RouteNames.splash,
           path: RouteNames.splashPath,
-          builder: (_, __) => const SplashScreen(),
+          pageBuilder: (_, __) => const NoTransitionPage(
+            child: SplashScreen(),
+          ),
         ),
         GoRoute(
           name: RouteNames.onboarding,
           path: RouteNames.onboardingPath,
-          builder: (_, __) => const OnboardingScreen(),
+          pageBuilder: (_, __) => const NoTransitionPage(
+            child: OnboardingScreen(),
+          ),
         ),
         GoRoute(
           name: RouteNames.login,
           path: RouteNames.loginPath,
-          builder: (_, __) => const LoginPage(),
+          pageBuilder: (_, __) => const NoTransitionPage(
+            child: LoginPage(),
+          ),
         ),
         GoRoute(
           name: RouteNames.register,
           path: RouteNames.registerPath,
-          builder: (_, __) => const RegisterPage(),
+          pageBuilder: (_, __) => const NoTransitionPage(
+            child: RegisterPage(),
+          ),
         ),
         ShellRoute(
           builder: (context, state, child) => AppShell(child: child),
@@ -67,27 +75,37 @@ class AppRouter {
             GoRoute(
               name: RouteNames.scan,
               path: RouteNames.scanPath,
-              builder: (_, __) => const ScanPage(),
+              pageBuilder: (_, __) => const NoTransitionPage(
+                child: ScanPage(),
+              ),
             ),
             GoRoute(
               name: RouteNames.store,
               path: RouteNames.storePath,
-              builder: (_, __) => const StorePage(),
+              pageBuilder: (_, __) => const NoTransitionPage(
+                child: StorePage(),
+              ),
             ),
             GoRoute(
               name: RouteNames.leaderboard,
               path: RouteNames.leaderboardPath,
-              builder: (_, __) => const LeaderboardPage(),
+              pageBuilder: (_, __) => const NoTransitionPage(
+                child: LeaderboardPage(),
+              ),
             ),
             GoRoute(
               name: RouteNames.map,
               path: RouteNames.mapPath,
-              builder: (_, __) => const MapPage(),
+              pageBuilder: (_, __) => const NoTransitionPage(
+                child: MapPage(),
+              ),
             ),
             GoRoute(
               name: RouteNames.profile,
               path: RouteNames.profilePath,
-              builder: (_, __) => const ProfilePage(),
+              pageBuilder: (_, __) => const NoTransitionPage(
+                child: ProfilePage(),
+              ),
             ),
           ],
         ),

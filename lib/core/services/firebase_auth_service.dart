@@ -1,11 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class FirebaseAuthService {
   FirebaseAuthService({
     FirebaseAuth? firebaseAuth,
   })  : _auth = firebaseAuth ?? FirebaseAuth.instance,
-        _google = GoogleSignIn.instance;
+        _google = GoogleSignIn.instance {
+    _google.initialize(
+      serverClientId: dotenv.env['GOOGLE_WEB_CLIENT_ID'],
+    );
+  }
 
   final FirebaseAuth _auth;
   final GoogleSignIn _google;
